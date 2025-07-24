@@ -4,324 +4,597 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>王家家庭旅遊投票</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1976d2 0%, #3f51b5 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .results-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .total-votes {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .destination-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .destination-item:hover {
+            border-color: #2196f3;
+        }
+        
+        .destination-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .destination-name {
+            font-weight: 500;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .destination-votes {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2196f3;
+        }
+        
+        .voters-list {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #2196f3;
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .winner-section {
+            background: #fff3e0;
+            border: 2px solid #ffb74d;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .winner-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .winner-name {
+            color: #f57c00;
+            font-weight: bold;
+        }
+        
+        .voting-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2196f3;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1976d2;
+        }
+        
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        
+        .success-message {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .success-text {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .continue-link {
+            color: #2196f3;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .continue-link:hover {
+            color: #1976d2;
+        }
+        
+        .reset-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .info-text {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .add-destination {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .add-destination:hover {
+            border-color: #2196f3;
+            background: #f3f8ff;
+        }
+        
+        .add-form {
+            margin: 15px 0;
+        }
+        
+        .add-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .trophy {
+            color: #ffc107;
+            margin-right: 8px;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .delete-btn:hover {
+            background: #d32f2f;
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { MapPin, Users, Trophy, Plus, X } = lucide;
-
-        const WangFamilyTravelApp = () => {
-            const [destinations, setDestinations] = useState([
-                { id: 1, name: '日本京都', votes: 0, voters: [] },
-                { id: 2, name: '台灣花蓮', votes: 0, voters: [] },
-                { id: 3, name: '韓國首爾', votes: 0, voters: [] }
-            ]);
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ 王家家庭旅遊</h1>
+            <p>投票決定我們的下一個旅遊地點！</p>
+        </div>
+        
+        <div class="content">
+            <div class="results-header">
+                <div class="results-title">🏆 投票結果</div>
+                <div class="total-votes">👥 總票數: <span id="totalVotes">0</span></div>
+            </div>
             
-            const [voterName, setVoterName] = useState('');
-            const [selectedDestination, setSelectedDestination] = useState('');
-            const [hasVoted, setHasVoted] = useState(false);
-            const [newDestination, setNewDestination] = useState('');
-            const [showAddForm, setShowAddForm] = useState(false);
-
-            // 從本地儲存載入資料
-            useEffect(() => {
-                const saved = localStorage.getItem('wangFamilyVotes');
-                if (saved) {
-                    try {
-                        setDestinations(JSON.parse(saved));
-                    } catch (e) {
-                        console.log('載入資料失敗，使用預設值');
-                    }
-                }
-            }, []);
-
-            // 儲存資料到本地儲存
-            useEffect(() => {
-                localStorage.setItem('wangFamilyVotes', JSON.stringify(destinations));
-            }, [destinations]);
-
-            const handleVote = () => {
-                if (!voterName.trim() || !selectedDestination) {
-                    alert('請輸入姓名並選擇旅遊地點！');
-                    return;
-                }
-
-                // 檢查是否已經投過票
-                const alreadyVoted = destinations.some(dest => 
-                    dest.voters.includes(voterName.trim())
-                );
-
-                if (alreadyVoted) {
-                    alert('您已經投過票了！');
-                    return;
-                }
-
-                setDestinations(prev => prev.map(dest => {
-                    if (dest.id === parseInt(selectedDestination)) {
-                        return {
-                            ...dest,
-                            votes: dest.votes + 1,
-                            voters: [...dest.voters, voterName.trim()]
-                        };
-                    }
-                    return dest;
-                }));
-
-                setHasVoted(true);
-                setVoterName('');
-                setSelectedDestination('');
-            };
-
-            const addDestination = () => {
-                if (!newDestination.trim()) {
-                    alert('請輸入地點名稱！');
-                    return;
-                }
-
-                if (destinations.length >= 3) {
-                    alert('最多只能有3個旅遊地點！');
-                    return;
-                }
-
-                const newId = Math.max(...destinations.map(d => d.id)) + 1;
-                setDestinations(prev => [...prev, {
-                    id: newId,
-                    name: newDestination.trim(),
-                    votes: 0,
-                    voters: []
-                }]);
-
-                setNewDestination('');
-                setShowAddForm(false);
-            };
-
-            const removeDestination = (id) => {
-                if (destinations.length <= 1) {
-                    alert('至少要有一個旅遊地點！');
-                    return;
-                }
-                setDestinations(prev => prev.filter(dest => dest.id !== id));
-            };
-
-            const resetVoting = () => {
-                if (confirm('確定要重新開始投票嗎？所有投票資料都會被清除。')) {
-                    setDestinations(prev => prev.map(dest => ({
-                        ...dest,
-                        votes: 0,
-                        voters: []
-                    })));
-                    setHasVoted(false);
-                }
-            };
-
-            const totalVotes = destinations.reduce((sum, dest) => sum + dest.votes, 0);
-            const winner = destinations.reduce((prev, current) => 
-                prev.votes > current.votes ? prev : current
-            );
-
-            const sortedDestinations = [...destinations].sort((a, b) => b.votes - a.votes);
-
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-                    <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-                        {/* Header */}
-                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
-                            <div className="flex items-center justify-center mb-2">
-                                <MapPin className="w-8 h-8 mr-2" />
-                                <h1 className="text-2xl font-bold">王家家庭旅遊</h1>
-                            </div>
-                            <p className="text-center text-blue-100">投票決定我們的下一個旅遊地點！</p>
-                        </div>
-
-                        {/* Voting Results */}
-                        <div className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                                    <Trophy className="w-6 h-6 mr-2 text-yellow-500" />
-                                    投票結果
-                                </h2>
-                                <div className="flex items-center text-sm text-gray-600">
-                                    <Users className="w-4 h-4 mr-1" />
-                                    總票數: {totalVotes}
-                                </div>
-                            </div>
-
-                            <div className="space-y-3 mb-6">
-                                {sortedDestinations.map((dest, index) => (
-                                    <div key={dest.id} className="relative">
-                                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-blue-300 transition-colors">
-                                            <div className="flex items-center">
-                                                {index === 0 && dest.votes > 0 && (
-                                                    <Trophy className="w-5 h-5 text-yellow-500 mr-2" />
-                                                )}
-                                                <div>
-                                                    <span className="font-medium text-gray-800">{dest.name}</span>
-                                                    {dest.voters.length > 0 && (
-                                                        <div className="text-xs text-gray-500 mt-1">
-                                                            投票者: {dest.voters.join(', ')}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <span className="text-2xl font-bold text-blue-600 mr-2">{dest.votes}</span>
-                                                {destinations.length > 1 && (
-                                                    <button
-                                                        onClick={() => removeDestination(dest.id)}
-                                                        className="text-red-500 hover:text-red-700 p-1"
-                                                        title="刪除地點"
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                        {totalVotes > 0 && (
-                                            <div className="mt-1 bg-gray-200 rounded-full h-2">
-                                                <div 
-                                                    className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                                                    style={{ width: `${(dest.votes / totalVotes) * 100}%` }}
-                                                ></div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Add New Destination */}
-                            {destinations.length < 3 && (
-                                <div className="mb-6">
-                                    {showAddForm ? (
-                                        <div className="space-y-3">
-                                            <input
-                                                type="text"
-                                                value={newDestination}
-                                                onChange={(e) => setNewDestination(e.target.value)}
-                                                placeholder="輸入新的旅遊地點"
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            />
-                                            <div className="flex space-x-2">
-                                                <button
-                                                    onClick={addDestination}
-                                                    className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
-                                                >
-                                                    新增
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setShowAddForm(false);
-                                                        setNewDestination('');
-                                                    }}
-                                                    className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors"
-                                                >
-                                                    取消
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => setShowAddForm(true)}
-                                            className="w-full flex items-center justify-center p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600 hover:text-blue-600"
-                                        >
-                                            <Plus className="w-5 h-5 mr-2" />
-                                            新增旅遊地點
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Winner Announcement */}
-                            {totalVotes > 0 && (
-                                <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 mb-6">
-                                    <div className="text-center">
-                                        <Trophy className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                                        <p className="text-lg font-semibold text-gray-800">
-                                            目前領先: <span className="text-yellow-600">{winner.name}</span>
-                                        </p>
-                                        <p className="text-sm text-gray-600">{winner.votes} 票</p>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Voting Form */}
-                            {!hasVoted && (
-                                <div className="space-y-4">
-                                    <h3 className="text-lg font-semibold text-gray-800">我要投票</h3>
-                                    
-                                    <input
-                                        type="text"
-                                        value={voterName}
-                                        onChange={(e) => setVoterName(e.target.value)}
-                                        placeholder="請輸入您的姓名"
-                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    />
-
-                                    <select
-                                        value={selectedDestination}
-                                        onChange={(e) => setSelectedDestination(e.target.value)}
-                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    >
-                                        <option value="">選擇旅遊地點</option>
-                                        {destinations.map(dest => (
-                                            <option key={dest.id} value={dest.id}>{dest.name}</option>
-                                        ))}
-                                    </select>
-
-                                    <button
-                                        onClick={handleVote}
-                                        className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-                                    >
-                                        投票
-                                    </button>
-                                </div>
-                            )}
-
-                            {hasVoted && (
-                                <div className="text-center">
-                                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-4">
-                                        <p className="text-green-800 font-semibold">✅ 投票成功！謝謝您的參與</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setHasVoted(false)}
-                                        className="text-blue-600 hover:text-blue-800 underline"
-                                    >
-                                        繼續為其他家人投票
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* Reset Button */}
-                            {totalVotes > 0 && (
-                                <div className="mt-6 pt-4 border-t border-gray-200">
-                                    <button
-                                        onClick={resetVoting}
-                                        className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
-                                    >
-                                        重新開始投票
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* Info */}
-                            <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-                                <p className="text-xs text-gray-500">
-                                    💾 投票資料會自動保存在瀏覽器中
-                                </p>
-                            </div>
-                        </div>
+            <div id="destinationsList"></div>
+            
+            <div id="addDestinationSection"></div>
+            
+            <div id="winnerSection" style="display: none;"></div>
+            
+            <div id="votingForm">
+                <div class="voting-form">
+                    <div class="form-title">我要投票</div>
+                    <div class="form-group">
+                        <input type="text" id="voterName" class="form-input" placeholder="請輸入您的姓名">
+                    </div>
+                    <div class="form-group">
+                        <select id="destinationSelect" class="form-select">
+                            <option value="">選擇旅遊地點</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="submitVote()">投票</button>
+                </div>
+            </div>
+            
+            <div id="successMessage" style="display: none;">
+                <div class="success-message">
+                    <div class="success-text">✅ 投票成功！謝謝您的參與</div>
+                    <div style="margin-top: 10px;">
+                        <span class="continue-link" onclick="continueVoting()">繼續為其他家人投票</span>
                     </div>
                 </div>
-            );
-        };
+            </div>
+            
+            <div id="resetSection" style="display: none;">
+                <div class="reset-section">
+                    <button class="btn btn-danger" onclick="resetVoting()">重新開始投票</button>
+                </div>
+            </div>
+            
+            <div class="info-text">
+                💾 投票資料會自動保存在瀏覽器中
+            </div>
+        </div>
+    </div>
 
-        ReactDOM.render(<WangFamilyTravelApp />, document.getElementById('root'));
+    <script>
+        // 初始化資料
+        let destinations = [
+            { id: 1, name: '日本京都', votes: 0, voters: [] },
+            { id: 2, name: '台灣花蓮', votes: 0, voters: [] },
+            { id: 3, name: '韓國首爾', votes: 0, voters: [] }
+        ];
+        
+        let hasVoted = false;
+        let showAddForm = false;
+
+        // 從本地儲存載入資料
+        function loadData() {
+            const saved = localStorage.getItem('wangFamilyVotes');
+            if (saved) {
+                try {
+                    destinations = JSON.parse(saved);
+                } catch (e) {
+                    console.log('載入資料失敗，使用預設值');
+                }
+            }
+        }
+
+        // 儲存資料到本地儲存
+        function saveData() {
+            localStorage.setItem('wangFamilyVotes', JSON.stringify(destinations));
+        }
+
+        // 渲染目的地列表
+        function renderDestinations() {
+            const sortedDestinations = [...destinations].sort((a, b) => b.votes - a.votes);
+            const totalVotes = destinations.reduce((sum, dest) => sum + dest.votes, 0);
+            
+            document.getElementById('totalVotes').textContent = totalVotes;
+            
+            const listHtml = sortedDestinations.map((dest, index) => {
+                const percentage = totalVotes > 0 ? (dest.votes / totalVotes) * 100 : 0;
+                const isWinner = index === 0 && dest.votes > 0;
+                
+                return `
+                    <div class="destination-item">
+                        <div class="destination-header">
+                            <div>
+                                <div class="destination-name">
+                                    ${isWinner ? '<span class="trophy">🏆</span>' : ''}
+                                    ${dest.name}
+                                </div>
+                                ${dest.voters.length > 0 ? `<div class="voters-list">投票者: ${dest.voters.join(', ')}</div>` : ''}
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div class="destination-votes">${dest.votes}</div>
+                                ${destinations.length > 1 ? `<button class="delete-btn" onclick="removeDestination(${dest.id})" title="刪除地點">❌</button>` : ''}
+                            </div>
+                        </div>
+                        ${totalVotes > 0 ? `
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('destinationsList').innerHTML = listHtml;
+            
+            // 更新下拉選單
+            const selectHtml = '<option value="">選擇旅遊地點</option>' + 
+                destinations.map(dest => `<option value="${dest.id}">${dest.name}</option>`).join('');
+            document.getElementById('destinationSelect').innerHTML = selectHtml;
+            
+            // 顯示獲勝者
+            if (totalVotes > 0) {
+                const winner = sortedDestinations[0];
+                document.getElementById('winnerSection').style.display = 'block';
+                document.getElementById('winnerSection').innerHTML = `
+                    <div class="winner-section">
+                        <div style="font-size: 32px; margin-bottom: 10px;">🏆</div>
+                        <div class="winner-title">目前領先: <span class="winner-name">${winner.name}</span></div>
+                        <div style="font-size: 14px; color: #666;">${winner.votes} 票</div>
+                    </div>
+                `;
+                document.getElementById('resetSection').style.display = 'block';
+            } else {
+                document.getElementById('winnerSection').style.display = 'none';
+                document.getElementById('resetSection').style.display = 'none';
+            }
+        }
+
+        // 渲染新增目的地區域
+        function renderAddDestination() {
+            if (destinations.length >= 3) {
+                document.getElementById('addDestinationSection').innerHTML = '';
+                return;
+            }
+            
+            if (showAddForm) {
+                document.getElementById('addDestinationSection').innerHTML = `
+                    <div class="add-form">
+                        <div class="form-group">
+                            <input type="text" id="newDestination" class="form-input" placeholder="輸入新的旅遊地點">
+                        </div>
+                        <div class="add-buttons">
+                            <button class="btn btn-success" onclick="addDestination()" style="flex: 1;">新增</button>
+                            <button class="btn" onclick="cancelAdd()" style="flex: 1; background: #666; color: white;">取消</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('addDestinationSection').innerHTML = `
+                    <div class="add-destination" onclick="showAddDestination()">
+                        ➕ 新增旅遊地點
+                    </div>
+                `;
+            }
+        }
+
+        // 顯示新增表單
+        function showAddDestination() {
+            showAddForm = true;
+            renderAddDestination();
+        }
+
+        // 取消新增
+        function cancelAdd() {
+            showAddForm = false;
+            renderAddDestination();
+        }
+
+        // 新增目的地
+        function addDestination() {
+            const input = document.getElementById('newDestination');
+            const newName = input.value.trim();
+            
+            if (!newName) {
+                alert('請輸入地點名稱！');
+                return;
+            }
+            
+            if (destinations.length >= 3) {
+                alert('最多只能有3個旅遊地點！');
+                return;
+            }
+            
+            const newId = Math.max(...destinations.map(d => d.id)) + 1;
+            destinations.push({
+                id: newId,
+                name: newName,
+                votes: 0,
+                voters: []
+            });
+            
+            showAddForm = false;
+            saveData();
+            renderAll();
+        }
+
+        // 刪除目的地
+        function removeDestination(id) {
+            if (destinations.length <= 1) {
+                alert('至少要有一個旅遊地點！');
+                return;
+            }
+            
+            destinations = destinations.filter(dest => dest.id !== id);
+            saveData();
+            renderAll();
+        }
+
+        // 投票
+        function submitVote() {
+            const voterName = document.getElementById('voterName').value.trim();
+            const selectedId = document.getElementById('destinationSelect').value;
+            
+            if (!voterName || !selectedId) {
+                alert('請輸入姓名並選擇旅遊地點！');
+                return;
+            }
+            
+            // 檢查是否已經投過票
+            const alreadyVoted = destinations.some(dest => dest.voters.includes(voterName));
+            if (alreadyVoted) {
+                alert('您已經投過票了！');
+                return;
+            }
+            
+            // 投票
+            destinations = destinations.map(dest => {
+                if (dest.id === parseInt(selectedId)) {
+                    return {
+                        ...dest,
+                        votes: dest.votes + 1,
+                        voters: [...dest.voters, voterName]
+                    };
+                }
+                return dest;
+            });
+            
+            hasVoted = true;
+            document.getElementById('voterName').value = '';
+            document.getElementById('destinationSelect').value = '';
+            
+            saveData();
+            renderAll();
+        }
+
+        // 繼續投票
+        function continueVoting() {
+            hasVoted = false;
+            renderAll();
+        }
+
+        // 重新開始投票
+        function resetVoting() {
+            if (confirm('確定要重新開始投票嗎？所有投票資料都會被清除。')) {
+                destinations = destinations.map(dest => ({
+                    ...dest,
+                    votes: 0,
+                    voters: []
+                }));
+                hasVoted = false;
+                saveData();
+                renderAll();
+            }
+        }
+
+        // 渲染所有內容
+        function renderAll() {
+            renderDestinations();
+            renderAddDestination();
+            
+            // 顯示/隱藏投票表單和成功訊息
+            if (hasVoted) {
+                document.getElementById('votingForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+            } else {
+                document.getElementById('votingForm').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            }
+        }
+
+        // 初始化應用程式
+        function init() {
+            loadData();
+            renderAll();
+        }
+
+        // 頁面載入完成後初始化
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>

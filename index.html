@@ -350,9 +350,9 @@
     <script>
         // 初始化資料
         let destinations = [
-            { id: 1, name: '日本京都', votes: 0, voters: [] },
-            { id: 2, name: '台灣花蓮', votes: 0, voters: [] },
-            { id: 3, name: '韓國首爾', votes: 0, voters: [] }
+            { id: 1, name: '日本京都', votes: 0, voters: [], date: '2025-08-15' },
+            { id: 2, name: '台灣花蓮', votes: 0, voters: [], date: '2025-09-01' },
+            { id: 3, name: '韓國首爾', votes: 0, voters: [], date: '2025-07-20' }
         ];
         
         let hasVoted = false;
@@ -393,6 +393,9 @@
                                 <div class="destination-name">
                                     ${isWinner ? '<span class="trophy">🏆</span>' : ''}
                                     ${dest.name}
+                                </div>
+                                <div style="font-size: 12px; color: #666; margin-top: 2px;">
+                                    📅 ${formatDate(dest.date)}
                                 </div>
                                 ${dest.voters.length > 0 ? `<div class="voters-list">投票者: ${dest.voters.join(', ')}</div>` : ''}
                             </div>
@@ -448,6 +451,9 @@
                         <div class="form-group">
                             <input type="text" id="newDestination" class="form-input" placeholder="輸入新的旅遊地點">
                         </div>
+                        <div class="form-group">
+                            <input type="date" id="newDestinationDate" class="form-input">
+                        </div>
                         <div class="add-buttons">
                             <button class="btn btn-success" onclick="addDestination()" style="flex: 1;">新增</button>
                             <button class="btn" onclick="cancelAdd()" style="flex: 1; background: #666; color: white;">取消</button>
@@ -478,10 +484,17 @@
         // 新增目的地
         function addDestination() {
             const input = document.getElementById('newDestination');
+            const dateInput = document.getElementById('newDestinationDate');
             const newName = input.value.trim();
+            const newDate = dateInput.value;
             
             if (!newName) {
                 alert('請輸入地點名稱！');
+                return;
+            }
+            
+            if (!newDate) {
+                alert('請選擇旅遊日期！');
                 return;
             }
             
@@ -495,7 +508,8 @@
                 id: newId,
                 name: newName,
                 votes: 0,
-                voters: []
+                voters: [],
+                date: newDate
             });
             
             showAddForm = false;
@@ -595,6 +609,18 @@
 
         // 頁面載入完成後初始化
         window.addEventListener('load', init);
+
+        // 格式化日期顯示
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const weekday = weekdays[date.getDay()];
+            
+            return `${year}年${month}月${day}日 (週${weekday})`;
+        }
     </script>
 </body>
 </html>

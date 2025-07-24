@@ -363,7 +363,12 @@
             const saved = localStorage.getItem('wangFamilyVotes');
             if (saved) {
                 try {
-                    destinations = JSON.parse(saved);
+                    const loadedData = JSON.parse(saved);
+                    // 確保每個目的地都有日期
+                    destinations = loadedData.map((dest, index) => ({
+                        ...dest,
+                        date: dest.date || ['2025-08-15', '2025-09-01', '2025-07-20'][index] || '2025-08-01'
+                    }));
                 } catch (e) {
                     console.log('載入資料失敗，使用預設值');
                 }
@@ -612,14 +617,23 @@
 
         // 格式化日期顯示
         function formatDate(dateString) {
-            const date = new Date(dateString);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            const weekday = weekdays[date.getDay()];
+            if (!dateString) return '待確定日期';
             
-            return `${year}年${month}月${day}日 (週${weekday})`;
+            try {
+                const date = new Date(dateString);
+                // 檢查日期是否有效
+                if (isNaN(date.getTime())) return '待確定日期';
+                
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                const weekday = weekdays[date.getDay()];
+                
+                return `${year}年${month}月${day}日 (週${weekday})`;
+            } catch (e) {
+                return '待確定日期';
+            }
         }
     </script>
 </body>
